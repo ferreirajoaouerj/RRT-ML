@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="target">
+  
+	<link name="base_link">
+		<visual>
+      		<origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+				<mesh filename="meshes/target_mesh.stl" get_scaled="1 1 1"/>
+            </geometry>
+            <material name="green">
+   5            <color rgba="0 1 0 0.7"/>
+   6        </material>
+    	</visual>
+	</link>
+
+</robot>

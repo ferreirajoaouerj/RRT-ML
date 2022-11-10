@@ -1,0 +1,279 @@
+env:
+  car:
+    axis_dist: 0.325
+    f_val: 10
+    phi_dot_max: 20.0
+    phi_max: 0.7
+    pose: 1.0
+    reset_z: 0.001
+    v_dot_max: 1.0
+    v_max: 1.0
+    wheel_dist: 0.2
+    wheel_radius: 0.05
+  general:
+    gui: false
+    max_timestep: 100
+    seed: 0
+    stats: false
+  reward:
+    epsilon: -0.1
+    p_val: 0.5
+    weights:
+    - 0.75
+    - 0.15
+  target:
+    pose: 1.0
+    reset_z: 0.0
+  test:
+    general:
+      ghost_interval: 80
+    narrow:
+      cam_dist: 8.0
+      cam_target:
+      - 5.0
+      - 5.0
+      - 0.0
+      img_crop:
+      - 232
+      - 126
+      - 808
+      - 704
+      img_extent:
+      - -1
+      - 11
+      - -1
+      - 11
+    none:
+      cam_dist: 3.35
+      cam_target:
+      - 0.0
+      - 0.0
+      - 0.0
+      img_crop:
+      - 176
+      - 71
+      - 864
+      - 759
+      img_extent:
+      - -3
+      - 3
+      - -3
+      - 3
+general:
+  algorithm: sl
+  config_name_or_prefix: best
+  description: '[''dim-latent'', ''loss-beta'', ''net-mlp_units'', ''train-lr''] /
+    2421 / (3, 0.05, [512, 512], 0.001)'
+  is_hyper: false
+  is_train: false
+hyperparams:
+  general:
+    name: h
+  rl:
+    actor:
+      l2: null
+      lr: null
+      weight_decay: null
+    critic:
+      lr: null
+    exploration:
+      epsilon: null
+      go_epsilon: null
+      go_reset_percent: null
+      initial: null
+      noise: null
+      warm_up: null
+    general:
+      gamma: null
+      her: null
+    net:
+      activ: null
+      grad_value_clipping: null
+      layer_norm: null
+      layers:
+      - - 512
+        - 512
+        - 512
+      - - 1024
+        - 1024
+    target:
+      grad_clip: null
+      update_frac: null
+      update_freq: null
+    train:
+      batch_size:
+      - 1024
+      - 2048
+      n_timesteps: null
+      optimize_every: null
+      replay_size: null
+  sl:
+    dim:
+      latent:
+      - 2
+      - 3
+    loss:
+      beta:
+      - 0.001
+      - 0.005
+      - 0.01
+      - 0.05
+      - 0.1
+      - 0.5
+      - 1.0
+      - 5.0
+    net:
+      mlp_units:
+      - - 256
+        - 256
+      - - 512
+        - 512
+    train:
+      batch_size: null
+      lr:
+      - 0.001
+      - 0.01
+      n_epochs: null
+  tests:
+    rl: {}
+    rrt: {}
+    sl:
+      compare:
+      - h_1111
+      - h_1112
+      map_num: 0
+      n_samples: 30
+      seed: 0
+maps:
+  arena:
+    length: 10.0
+    offset:
+    - 0.0
+    - 0.0
+    width: 10.0
+  general:
+    map_name: narrow
+  narrow:
+    narrow1_pos:
+    - 3.5
+    - 4.5
+    narrow2_pos:
+    - 6.5
+    - 4.5
+    passage_width: 1.4
+    size: 10.0
+    wall_width: 0.4
+  obstacles:
+    color:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+    height: 0.05
+    mass: 1000.0
+    reset_z: 0.205
+rl:
+  actor:
+    l2: 0.1
+    lr: 0.001
+    weight_decay: 0.0
+  critic:
+    lr: 0.001
+  exploration:
+    epsilon: 0.1
+    go_epsilon: 0.1
+    go_reset_percent: 0.0
+    initial: 5000
+    noise: 0.1
+    warm_up: 2500
+  general:
+    gamma: 0.99
+    her: rfaab_1_4_3_1_1
+    just_use_policy: false
+  net:
+    activ: gelu
+    grad_value_clipping: 5.0
+    layer_norm: true
+    layers:
+    - 512
+    - 512
+    - 512
+  target:
+    grad_clip: 5.0
+    update_frac: 0.05
+    update_freq: 40
+  train:
+    batch_size: 2048
+    n_envs: 1
+    n_timesteps: 1000000
+    optimize_every: 1
+    replay_size: 1000000
+  val:
+    gui: false
+    interval: 10000
+    n_envs: 1
+    n_episodes: 50
+    stats: true
+    target_pose: 2.0
+rrt:
+  general:
+    controller: rl
+    delta_t: 20
+    distance_fn: rl-ordinal
+    n_iter: 5000
+    reward_threshold_multiplier: 1.2
+    seed: 0
+  mpc:
+    control_cost: 0.0001
+    n_horizon: 10
+    n_robust: 4
+    step_size: 0.01
+    weight_angle: 0.05
+    weight_pos: 1.0
+  names:
+    rl: default
+    sl: default
+  near:
+    cutoff: 20.0
+    max_n_nodes: 20
+  nearest:
+    min_n_timesteps: 8
+  ordinal:
+    batch_size: 128
+    data_ratio: 0.1
+    dropout: 0.1
+    early_stop: 5
+    layers:
+    - 512
+    - 512
+    - 512
+    lr: 0.001
+    max_n_timesteps: 30
+    max_xy: 2.0
+  rs:
+    curvature: 1.0
+    step_size: 0.01
+    tolerance: 0.01
+  sample:
+    goal_prob: 0.05
+    learner_prob: 0.7
+sl:
+  dim:
+    latent: 3
+    obstacle: 4
+    state: 4
+  general:
+    data_ratio: 0.5
+  loss:
+    beta: 0.05
+  net:
+    mlp_units:
+    - 512
+    - 512
+  train:
+    batch_size: 64
+    lr: 0.001
+    n_epochs: 50
+  val:
+    n_maps: 30
+    n_states: 1000

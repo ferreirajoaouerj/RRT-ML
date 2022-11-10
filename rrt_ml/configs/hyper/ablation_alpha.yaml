@@ -1,0 +1,14 @@
+rrt:
+  general:
+    controller: mpc
+    distance_fn: rs
+    n_iter: 500
+    rewire: false
+hyperparams:
+  rrt:
+    general:
+      controller: null
+      distance_fn: null
+      seed: [0, 1, 2, 3, 4]
+    sample:
+      learner_prob: [0, 0.9]
