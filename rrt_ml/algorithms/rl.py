@@ -1,3 +1,4 @@
+import time
 from multiprocessing import cpu_count
 
 import matplotlib.ticker as ticker
@@ -104,6 +105,7 @@ class RL(Algorithm):
         self._test_plot_compare_mpcrs()
         self._test_plot_compare_rs()
         self._test_plot_compare_rs_mpcrs()
+        self._test_chasing()
 
     def save_checkpoint(self, epoch_info: 'RLEpochInfo'):
         """
@@ -406,6 +408,33 @@ class RL(Algorithm):
             with open(str(train_file_path), "a") as file:
                 # noinspection PyTypeChecker
                 np.savetxt(file, np.array(data), delimiter=",")
+
+    def _test_chasing(self):
+        """
+        Test chasing different poses.
+        """
+
+        # Env
+        cfg = self.cfg.copy(deep=True)
+        cfg.env.general.gui = True
+        cfg.env.car.pose = [0, 0, 0]
+        cfg.env.target.pose = 1
+        cfg.env.reward.epsilon = -0.15
+        cfg.env.general.max_timestep = 10000
+        env = CarNavigationBulletEnv(cfg)
+        obs = env.reset()
+
+        # Loop all episodes
+        for _ in range(100):
+
+            # Loop
+            time.sleep(0.5)
+            done = False
+            pose = np.random.uniform([-1, -1, 0], [1, 1, 2*np.pi])
+            env.target.set_pose(pose)
+            while not done:
+                obs, reward, done, info = env.step(self.get_action(obs))
+                time.sleep(1/45)
 
     def _test_plot_compare_mpcrs(self):
         """
