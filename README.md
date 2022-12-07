@@ -76,8 +76,6 @@ pip install rrt-ml
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -89,14 +87,12 @@ rrt-ml -h
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
 
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
-
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
