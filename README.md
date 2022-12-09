@@ -79,11 +79,17 @@ pip install rrt-ml
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Run experiments from the command line:
+```
+rrt-ml (--rl | --sl | --rrt) (--train | --test) [--config CONFIG] [--hyper]
+```
 
-```
-rrt-ml -h
-```
+You can run experiments based on a config file. The experiment can be to `--train` a model or `--test` it. Possible models are:
+
+* `--rl`: reinforcement learning agent as a local controller
+* `--sl`: "sample learner" to learn sampling distributions for optimal motion planning with RRT*
+* `--rrt`: optimal rapidly-exploring random tree 
+
+If you specify the `--hyper` you will perform a search on hyperparameters, with `--train`, or visualize the differences between models, with `--test`. 
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
 
