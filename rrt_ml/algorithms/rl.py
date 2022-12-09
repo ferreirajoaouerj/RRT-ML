@@ -1331,7 +1331,11 @@ class RL(Algorithm):
         """
 
         if self.load_checkpoint:
-            self.stats = RLStats.load_from_file(self.path_stats)
+            try:
+                self.stats = RLStats.load_from_file(self.path_stats)
+            except EOFError:
+                self.stats = RLStats.new(self.cfg)
+                self.stats.save_to_file(self.path_stats)
         else:
             self.stats = RLStats.new(self.cfg)
             self.stats.save_to_file(self.path_stats)
