@@ -142,7 +142,7 @@ cfg.rrt.names.rl = 'best'  # Use config name 'best' as controller for RRT
 cfg.rrt.names.sl = 'best'  # Use config name 'best' as sample generator
 ```
 
-You can also set a grid search over any setting that exists inside the `rl|sl|rrt` attributes above. Below an example on how to perform a grid search over the hyper-parameters for the RL agent:
+You can also set a grid search over any setting that exists inside the `rl|sl|rrt` attributes above. Below an example on how to setup a grid search over the hyper-parameters for the RL agent:
 
 ```
 cfg.hyperparams.rl.general.gamma = [0.95, 0.96, 0.97, 0.98, 0.99]
