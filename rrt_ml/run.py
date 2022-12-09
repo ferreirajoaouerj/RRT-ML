@@ -23,8 +23,8 @@ def run_rrt_ml():
     group_train = parser.add_mutually_exclusive_group(required=True)
     group_train.add_argument("--train", action="store_true")
     group_train.add_argument("--test", action="store_true")
-    parser.add_argument("--config", type=str, required=False)
     parser.add_argument("--hyper", action="store_true", required=False, default=False)
+    parser.add_argument("--config", type=str, required=False)
     args = parser.parse_args()
 
     # Load config

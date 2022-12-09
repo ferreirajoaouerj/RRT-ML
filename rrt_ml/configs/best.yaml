@@ -1,0 +1,15 @@
+rl:
+  net:
+    layers: [512, 512, 512]
+  train:
+    batch_size: 2048
+
+sl:
+  dim:
+    latent: 3
+  loss:
+    beta: 0.05
+  net:
+    mlp_units: [512, 512]
+  train:
+    lr: 0.001

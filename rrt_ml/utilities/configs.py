@@ -1,8 +1,13 @@
 from typing import Any
+from argparse import Namespace
 
 from pydantic import BaseModel
 import yaml
 
+from rrt_ml.runner.run_hyper import run_hyper
+from rrt_ml.runner.run_rl import run_rl
+from rrt_ml.runner.run_rrt import run_rrt
+from rrt_ml.runner.run_sl import run_sl
 from rrt_ml.utilities.hints import *
 from rrt_ml.utilities.paths import *
 
@@ -439,6 +444,42 @@ class MasterConfig(BaseModel):
 
         return cfg
 
+    def run(self, algorithm_to_run='rl', train_or_test='train', hyperparam_search_or_test=False):
+        """
+        Run algorithm following this config.
+        :param algorithm_to_run: run 'rl', 'sl' or 'rrt'.
+        :param train_or_test: train module or test it.
+        :param hyperparam_search_or_test: if True and train then perform hyper search. If test, compare after search.
+        """
+
+        self.general.algorithm = algorithm_to_run
+        self.general.is_train = True if train_or_test == 'train' else False
+        self.general.is_hyper = hyperparam_search_or_test
+
+        if not self.general.is_hyper:
+            match self.general.algorithm:
+                case 'rl':
+                    run_rl(self)
+                case 'rrt':
+                    run_rrt(self)
+                case 'sl':
+                    run_sl(self)
+                case _:
+                    raise NotImplementedError
+
+        else:
+            run_hyper(self)
+
+    def save(self):
+        """
+        Save config to yaml file.
+        """
+
+        # Save config at experiment base folder
+        path = Paths().configs / self.general.config_name_or_prefix
+        with open(str(path), 'w') as f:
+            yaml.dump(self.dict(), f)
+
     @classmethod
     def load(cls, args):
         """
@@ -472,7 +513,7 @@ class MasterConfig(BaseModel):
         if not is_default:
 
             # If config file exists, load it
-            path = Paths().cfg(algorithm, config_name_or_prefix, is_hyper)
+            path = Paths().configs / 'config_name_or_prefix'
             if path.exists():
                 with open(str(path)) as f:
                     overrider_dict = yaml.safe_load(f)
@@ -576,3 +617,4 @@ class MasterConfig(BaseModel):
                 pass
 
         return config
+
