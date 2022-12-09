@@ -79,6 +79,8 @@ pip install rrt-ml
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+Run the program from the command line:
+
 ```
 rrt-ml (--rl | --sl | --rrt) (--train | --test) [--config CONFIG] [--hyper]
 ```
