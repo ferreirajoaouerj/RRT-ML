@@ -16,7 +16,13 @@ Rapidly exploring random trees with machine learning - learned sampling distribu
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#interface">Interface</a></li>
+        <li><a href="#configuring-an-experiment">Configuring an Experiment</a></li>
+      </ul>
+    </li>
     <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -79,9 +85,11 @@ pip install rrt-ml
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+You can run experiments with different parameters for each module. Run from the command line or from any python file.
+
 ### Interface
 
-Run the program from the command line:
+Run experiments from the command line:
 
 ```
 rrt-ml (--rl | --sl | --rrt) (--train | --test) [--hyper] [--config CONFIG]
@@ -104,7 +112,7 @@ rrt-ml (--rl | --sl | --rrt) (--train | --test) [--hyper] [--config CONFIG]
 
 ### Configuring an Experiment
 
-Create a `MasterConfig` object and set a name to it:
+Create a python file anywhere. Create a `MasterConfig` object and set a name to it:
 
 ```
 from rrt_ml.utilities.configs import MasterConfig
@@ -142,7 +150,25 @@ cfg.hyperparams.rl.actor.lr = [0.1, 0.01, 0.001]
 cfg.hyperparams.rl.net.activ = ['ReLU', 'GeLU']
 ```
 
-All other settings will remain fixed with default values or the ones you provide when settings attributes to `cfg.rl`.
+Now you can save the config to run later from the command line:
+
+```
+cfg.save()
+```
+
+Training an RL agent with this example config from the command line:
+
+```
+rrt-ml --rl --train --config=MyExperimentConfigName
+```
+
+Instead of saving and the running from the command line, you can simply run it from the python file you are editing, by adding this:
+
+```
+cfg.run(algorithm_to_run='rl', train_or_test='train', hyperparam_search_or_test=False)
+```
+
+The parameters of the `run` method are equal to the ones from the command line.
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
 
