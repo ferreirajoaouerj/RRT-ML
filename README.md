@@ -16,7 +16,13 @@ Rapidly exploring random trees with machine learning - learned sampling distribu
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#interface">Interface</a></li>
+        <li><a href="#configuring-an-experiment">Configuring an Experiment</a></li>
+      </ul>
+    </li>
     <li><a href="#license">License</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -28,9 +34,9 @@ Rapidly exploring random trees with machine learning - learned sampling distribu
 
 This project unites optimal rapidly exploring random trees (RRT*) with the following machine learning techniques:
 
-* Learned distribution of samples (robot configurations) as proposed by [@cite itcher] 
-* Reinforcement learning agent trained with MEGA [@cite spitis] as a local controller
-* Supervised learning of a distance metric induced by the agent
+* Learned distribution of robot configurations ([Itcher et. al., 2017](https://arxiv.org/abs/1709.05448))
+* Reinforcement learning agent trained with DDPG ([Lillicrap et. al., 2015](https://arxiv.org/abs/1509.02971)) and MEGA ([Pitis et. al., 2020](https://arxiv.org/abs/2007.02832)) as a local controller
+* Ordinal supervised learning ([Shi et. al. 2021](https://arxiv.org/abs/2111.08851)) of a distance metric induced by the agent
 
 The experiments are conducted in PyBullet with a car-like mobile robot in a narrow passage type of scenario. 
 The code allows the training and testing of each machine learning modules individually, but also in the context of the broader RRT* approach.
@@ -79,19 +85,90 @@ pip install rrt-ml
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Run the program from the command line:
+You can run experiments with different parameters for each module. Run from the command line or from any python file.
+
+### Interface
+
+Run experiments from the command line:
 
 ```
-rrt-ml (--rl | --sl | --rrt) (--train | --test) [--config CONFIG] [--hyper]
+rrt-ml (--rl | --sl | --rrt) (--train | --test) [--hyper] [--config CONFIG]
 ```
 
-You can run experiments based on a config file. The experiment can be to `--train` a model or `--test` it. Possible models are:
+1) The first option controls which algorithm will run:
 
 * `--rl`: reinforcement learning agent as a local controller
 * `--sl`: "sample learner" to learn sampling distributions for optimal motion planning with RRT*
 * `--rrt`: optimal rapidly-exploring random tree 
 
-If you specify the `--hyper` you will perform a search on hyperparameters, with `--train`, or visualize the differences between models, with `--test`. 
+2) The second option controls how should it run:
+
+* `--train`: train a machine learning model (RL or SL) or grow the RRT* tree
+* `--test`: generate various results (only after training)
+
+3) The third option, `--hyper`, determines whether a search for hyperparameters should be made. If the second option is `--train`, then each possible config of the grid search is trained. If the second option is `--test`, then a bunch of results will be produced in order to compare different models (only after training).
+
+4) The fourth option specify the name of the config. Below there are instructions to create a config file or directly run it, without using the command line.
+
+### Configuring an Experiment
+
+Create a python file anywhere. Create a `MasterConfig` object and set a name to it:
+
+```
+from rrt_ml.utilities.configs import MasterConfig
+
+
+cfg = MasterConfig()
+
+cfg.general.config_name_or_prefix = "MyExperimentConfigName"
+```
+
+Your IDE should auto-complete `cfg` and show all nested attributes. You can change various settings for all algorithms individually:
+
+```
+# Change reinforcement learning agent config
+cfg.rl.general.gamma = 0.98
+cfg.rl.actor.lr = 0.01
+cfg.rl.critic.lr = 0.01
+
+# Change sample learner (beta-cvae) config
+cfg.sl.loss.beta = 5
+cfg.sl.train.batch_size = 128
+
+# Change RRT* config
+cfg.rrt.general.seed = 1
+cfg.rrt.sample.goal_prob = 0.05
+cfg.rrt.names.rl = 'best'  # Use config name 'best' as controller for RRT
+cfg.rrt.names.sl = 'best'  # Use config name 'best' as sample generator
+```
+
+You can also set a grid search over any setting that exists inside the `rl|sl|rrt` attributes above. Below an example on how to setup a grid search over the hyper-parameters for the RL agent:
+
+```
+cfg.hyperparams.rl.general.gamma = [0.95, 0.96, 0.97, 0.98, 0.99]
+cfg.hyperparams.rl.actor.lr = [0.1, 0.01, 0.001]
+cfg.hyperparams.rl.net.activ = ['ReLU', 'GeLU']
+```
+
+Now you can save the config to run later from the command line:
+
+```
+cfg.save()
+```
+
+Training an RL agent with this example config from the command line:
+
+```
+rrt-ml --rl --train --config=MyExperimentConfigName
+```
+
+Instead of saving and the running from the command line, you can simply run it from the python file you are editing, by adding this:
+
+```
+cfg.run(algorithm_to_run='rl', train_or_test='train', hyperparam_search_or_test=False)
+```
+
+The parameters of the `run` method are equal to the ones from the command line.
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
 
@@ -111,6 +188,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 * [Python Robotics](https://github.com/Lucifer2700/Python-Robotics)
 * [Coral-PyTorch](https://github.com/Raschka-research-group/coral-pytorch)
 * [TorchEnsemble](https://github.com/TorchEnsemble-Community/Ensemble-Pytorch)
+* [Optuna](https://optuna.org)
 
 <p align="right">(<a href="#rrt-ml">back to top</a>)</p>
 
