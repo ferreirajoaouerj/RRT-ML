@@ -1,2 +1,3 @@
 global-include *.csv *.json *.yaml *.png *.pickle *.pt *attrs*
 global-include *.urdf *.dae *.stl *.STL *.mtl *.obj *.jpg *.jpeg
+graft rrt_ml/deps*

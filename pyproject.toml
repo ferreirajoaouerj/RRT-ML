@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rrt-ml"
-version = "0.0.7"
+version = "0.0.8"
 description = "Rapidly exploring random trees with machine learning"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -41,3 +41,6 @@ dependencies = [
 
 [project.scripts]
 rrt-ml = "rrt_ml.run:run_rrt_ml"
+
+[tool.setuptools]
+include-package-data = true
